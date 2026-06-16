@@ -1,0 +1,24 @@
+Core Features (Must Have)
+CPU Usage
+RAM Usage
+Disk Usage
+Online / Offline Status
+Uptime
+Hostname
+Server IP
+Last Seen Time
+Load Average
+OS Information
+Most Used Extra Features
+Docker Containers Running
+Running Services Status
+Project Count
+SSL Expiry Monitoring
+Port Monitoring
+Nginx Status
+Database Status (MySQL/PostgreSQL/Redis)
+Bandwidth Usage
+Network Ping/Latency
+Disk Growth Tracking
+
+by clicking the server needed this details detaily liek that 

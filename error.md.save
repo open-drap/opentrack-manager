@@ -1,0 +1,16 @@
+Unexpected Application Error!
+Cannot access 'ht' before initialization
+ReferenceError: Cannot access 'ht' before initialization
+    at cG (https://opentrack-manager.hf.space/assets/index-BXREGZmY.js:443:63514)
+    at H0 (https://opentrack-manager.hf.space/assets/index-BXREGZmY.js:38:17879)
+    at pw (https://opentrack-manager.hf.space/assets/index-BXREGZmY.js:40:44993)
+    at cw (https://opentrack-manager.hf.space/assets/index-BXREGZmY.js:40:40564)
+    at yI (https://opentrack-manager.hf.space/assets/index-BXREGZmY.js:40:40492)
+    at Uf (https://opentrack-manager.hf.space/assets/index-BXREGZmY.js:40:40345)
+    at m1 (https://opentrack-manager.hf.space/assets/index-BXREGZmY.js:40:36604)
+    at ow (https://opentrack-manager.hf.space/assets/index-BXREGZmY.js:40:35552)
+    at B (https://opentrack-manager.hf.space/assets/index-BXREGZmY.js:25:1663)
+    at MessagePort.Y (https://opentrack-manager.hf.space/assets/index-BXREGZmY.js:25:2042)
+💿 Hey developer 👋
+
+You can provide a way better UX than this when your app throws errors by providing your own ErrorBoundary or errorElement prop on your route.

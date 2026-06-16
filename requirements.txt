@@ -1,0 +1,15 @@
+fastapi
+uvicorn
+httpx
+jinja2
+python-multipart
+bcrypt
+python-jose[cryptography]
+aiosqlite
+asyncpg
+aiomysql
+python-dotenv
+dnspython
+cryptography
+pyotp
+qrcode[pil]
