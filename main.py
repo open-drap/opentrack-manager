@@ -275,6 +275,14 @@ async def settings_page():
 async def profile_page():
     return _frontend_response()
 
+@app.get("/projects")
+async def projects_page():
+    return _frontend_response()
+
+@app.get("/monitoring")
+async def monitoring_page():
+    return _frontend_response()
+
 @app.get("/api/status/{username}")
 async def public_status(username: str):
     async with _DB() as db:
@@ -1376,8 +1384,18 @@ async def resolve_incident(incident_id: int, request: Request, user=Depends(get_
 
 
 @app.get("/{full_path:path}")
-async def serve_static_or_frontend(full_path: str):
-    static_file = FRONTEND_DIST / full_path
-    if static_file.is_file():
-        return FileResponse(str(static_file))
+async def spa_fallback(full_path: str):
+    # API paths that aren't registered should return 404, not the SPA
+    if full_path.startswith("api/"):
+        raise HTTPException(status_code=404, detail="Not found")
+    # Serve real files from dist (e.g. manifest, icons, SW) with traversal guard
+    if full_path:
+        candidate = (FRONTEND_DIST / full_path).resolve()
+        try:
+            candidate.relative_to(FRONTEND_DIST.resolve())
+            if candidate.is_file():
+                return FileResponse(str(candidate))
+        except ValueError:
+            pass
+    # All other routes → serve index.html so React Router handles them
     return _frontend_response()
