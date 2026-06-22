@@ -13,3 +13,4 @@ dnspython
 cryptography
 pyotp
 qrcode[pil]
+boto3

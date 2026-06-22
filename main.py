@@ -13,6 +13,7 @@ from pathlib import Path
 from datetime import datetime, UTC, timedelta
 from cryptography.fernet import Fernet
 from database import init_db
+from b2_sync import restore_from_b2, upload_to_b2, b2_sync_worker
 from auth import SECRET, hash_password, verify_password, create_token, create_pin_unlock, verify_pin_unlock, get_current_user, get_current_user_raw
 from monitors import monitor_worker, send_telegram, server_alert_worker
 from captcha import generate as gen_captcha
@@ -35,12 +36,14 @@ if FRONTEND_ASSETS.exists():
 
 @app.on_event("startup")
 async def startup():
+    await restore_from_b2()          # pull latest DB from B2 before anything else
     await init_db()
     asyncio.create_task(monitor_worker())
     asyncio.create_task(server_alert_worker())
     from bot import poll_bot
     asyncio.create_task(poll_bot())
     asyncio.create_task(note_reminder_worker())
+    asyncio.create_task(b2_sync_worker())   # push DB to B2 every 5 min
 
 @app.get("/api/me")
 async def get_me(user=Depends(get_current_user)):
