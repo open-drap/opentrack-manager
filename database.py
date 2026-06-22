@@ -1,6 +1,8 @@
 from db import _DB, DRIVER
 
 PK = "INTEGER PRIMARY KEY AUTOINCREMENT" if DRIVER == "sqlite" else "SERIAL PRIMARY KEY"
+# SQLite stores timestamps as TEXT; PostgreSQL uses proper TIMESTAMP columns
+TS_COL = "TEXT DEFAULT ''" if DRIVER == "sqlite" else "TIMESTAMP"
 
 async def init_db():
     async with _DB() as db:
@@ -73,7 +75,7 @@ async def init_db():
                 api_key TEXT DEFAULT '',
                 notes TEXT DEFAULT '',
                 category TEXT DEFAULT '',
-                password_changed_at TEXT DEFAULT '',
+                password_changed_at {TS_COL},
                 favorite INTEGER DEFAULT 0,
                 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                 FOREIGN KEY(user_id) REFERENCES users(id)
@@ -212,6 +214,18 @@ async def init_db():
                     await db.execute(f"ALTER TABLE servers ADD COLUMN IF NOT EXISTS {col} {typ}")
                 except:
                     pass
+            # Migrate vault.password_changed_at from TEXT → TIMESTAMP (needed for asyncpg type safety)
+            try:
+                await db.execute("""
+                    ALTER TABLE vault
+                    ALTER COLUMN password_changed_at TYPE TIMESTAMP
+                    USING CASE WHEN password_changed_at IS NULL OR password_changed_at = ''
+                          THEN NULL
+                          ELSE password_changed_at::TIMESTAMP END
+                """)
+                await db.commit()
+            except:
+                pass
         elif DRIVER == "sqlite":
             for col, typ in _server_new_cols:
                 try:

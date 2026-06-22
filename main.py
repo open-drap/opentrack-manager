@@ -464,7 +464,7 @@ async def import_backup(request: Request, user=Depends(get_current_user)):
             ak = encrypt_val(f, item.get("api_key",""))
             await db.execute(
                 "INSERT INTO vault (user_id, name, url, username, password, api_key, notes, category, password_changed_at, favorite) VALUES (?,?,?,?,?,?,?,?,?,?)",
-                [user["id"], name, item.get("url",""), item.get("username",""), pw, ak, item.get("notes",""), item.get("category",""), item.get("password_changed_at",""), 1 if item.get("favorite") else 0]
+                [user["id"], name, item.get("url",""), item.get("username",""), pw, ak, item.get("notes",""), item.get("category",""), item.get("password_changed_at") or None, 1 if item.get("favorite") else 0]
             )
         for item in auths:
             name = (item.get("name") or "").strip()
